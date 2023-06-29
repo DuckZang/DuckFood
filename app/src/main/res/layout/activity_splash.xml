@@ -13,7 +13,8 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="295dp"
         android:background="@drawable/rounded_image"
-        android:src="@drawable/logo_duckfood" />
+        android:src="@drawable/logo_duckfood"
+        android:contentDescription="@string/text_img_content" />
 
     <TextView
         android:id="@+id/btn_batDau"
@@ -24,7 +25,7 @@
         android:layout_marginTop="33dp"
         android:layout_marginEnd="26dp"
         android:textColor="#FF3A3A"
-        android:text="+ Bắt đầu"
+        android:text="@string/text_button_splash_start"
         android:textStyle="bold"
         android:textSize="25sp"
         android:gravity="center"
@@ -38,9 +39,11 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="139dp"
         android:layout_marginEnd="0dp"
-        android:src="@drawable/image1" />
+        android:src="@drawable/image1"
+        android:contentDescription="@string/text_img_content" />
 
     <TextView
+        android:id="@+id/tv_slogan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -48,10 +51,10 @@
         android:layout_marginTop="382dp"
         android:layout_marginEnd="0dp"
         android:gravity="center"
-        android:text="Chào mừng bạn đến với “DuckFood”"
+        android:text="@string/text_slogan"
         android:textColor="#000000"
         android:textSize="40sp"
-        android:textStyle="bold"></TextView>
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="match_parent"
@@ -61,10 +64,10 @@
         android:layout_marginTop="557dp"
         android:layout_marginEnd="0dp"
         android:gravity="center"
-        android:text="Hãy tận hưởng cuộc phiêu lưu ẩm thực cùng [DuckFood]!"
+        android:text="@string/text_description1"
         android:textColor="#000000"
         android:textSize="20sp"
-        android:textStyle="italic"></TextView>
+        android:textStyle="italic" />
 
     <TextView
         android:layout_width="match_parent"
@@ -74,8 +77,8 @@
         android:layout_marginTop="608dp"
         android:layout_marginEnd="0dp"
         android:gravity="center"
-        android:text="Khám phá những công thức nấu ăn đa dạng, từ món truyền thống đến món mới lạ. Chúng tôi sẽ giúp bạn trở thành đầu bếp tài ba trong gia đình."
+        android:text="@string/text_description2"
         android:textColor="#000000"
         android:textSize="20sp"
-        android:textStyle="italic"></TextView>
+        android:textStyle="italic" />
 </RelativeLayout>

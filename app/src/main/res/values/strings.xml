@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DuckFood</string>
+    <string name="text_img_content">hình ảnh</string>
+    <string name="text_slogan">Chào mừng bạn đến với “DuckFood”</string>
+    <string name="text_description1">Hãy tận hưởng cuộc phiêu lưu ẩm thực cùng [DuckFood]!</string>
+    <string name="text_description2">Khám phá những công thức nấu ăn đa dạng, từ món truyền thống đến món mới lạ. Chúng tôi sẽ giúp bạn trở thành đầu bếp tài ba trong gia đình.</string>
+    <string name="text_button_splash_start">+ Bắt đầu</string>
 </resources>
