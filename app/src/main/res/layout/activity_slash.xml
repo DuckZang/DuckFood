@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/trangchu"
+    >
+    <ImageView
+        android:id="@+id/logo_duckfood"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="295dp"
+        android:background="@drawable/rounded_image"
+        android:src="@drawable/logo_duckfood" />
+
+    <TextView
+        android:id="@+id/btn_batDau"
+        android:layout_width="140dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="26dp"
+        android:textColor="#FF3A3A"
+        android:text="+ Bắt đầu"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:background="@drawable/rounded_button_start">
+    </TextView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="139dp"
+        android:layout_marginEnd="0dp"
+        android:src="@drawable/image1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="382dp"
+        android:layout_marginEnd="0dp"
+        android:gravity="center"
+        android:text="Chào mừng bạn đến với “DuckFood”"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:textStyle="bold"></TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="557dp"
+        android:layout_marginEnd="0dp"
+        android:gravity="center"
+        android:text="Hãy tận hưởng cuộc phiêu lưu ẩm thực cùng [DuckFood]!"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="italic"></TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="608dp"
+        android:layout_marginEnd="0dp"
+        android:gravity="center"
+        android:text="Khám phá những công thức nấu ăn đa dạng, từ món truyền thống đến món mới lạ. Chúng tôi sẽ giúp bạn trở thành đầu bếp tài ba trong gia đình."
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="italic"></TextView>
+</RelativeLayout>
