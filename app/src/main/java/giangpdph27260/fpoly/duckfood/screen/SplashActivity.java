@@ -39,7 +39,5 @@ public class SplashActivity extends AppCompatActivity {
                 .load(R.drawable.logo_duckfood)
                 .apply(RequestOptions.circleCropTransform())
                 .into(logoDuckFood);
-
-
     }
 }

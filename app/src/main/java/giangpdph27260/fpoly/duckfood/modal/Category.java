@@ -28,6 +28,6 @@ public class Category {
     @NonNull
     @Override
     public String toString() {
-        return "Catefory: {title: " + title + ", imageUrl: " + imageUrl + "}";
+        return "Category: {title: " + title + ", imageUrl: " + imageUrl + "}";
     }
 }

@@ -1,6 +1,5 @@
 package giangpdph27260.fpoly.duckfood;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -84,6 +83,7 @@ class ParseHtmlTask extends AsyncTask<String, Void, List<Category>> {
             Elements element = document.getElementsByClass("col row-box-shadow-5 medium-4 small-12 large-4");
 
             for (Element e : element) {
+                Log.d(MainActivity.TAG, "element: "+element.outerHtml());
                 Category item = new Category();
                 item.setTitle(e.select("h3.title a").text());
                 item.setImageUrl(e.select("img").attr("src"));
