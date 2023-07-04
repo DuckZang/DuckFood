@@ -5,4 +5,6 @@
     <string name="text_description1">Hãy tận hưởng cuộc phiêu lưu ẩm thực cùng [DuckFood]!</string>
     <string name="text_description2">Khám phá những công thức nấu ăn đa dạng, từ món truyền thống đến món mới lạ. Chúng tôi sẽ giúp bạn trở thành đầu bếp tài ba trong gia đình.</string>
     <string name="text_button_splash_start">+ Bắt đầu</string>
+    <string name="text_menu_home">Trang chủ</string>
+    <string name="text_menu_fav_list">Danh sách yêu thích</string>
 </resources>
