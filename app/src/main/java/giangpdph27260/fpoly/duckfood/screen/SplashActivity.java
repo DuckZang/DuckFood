@@ -1,4 +1,4 @@
-package giangpdph27260.fpoly.duckfood.Screen;
+package giangpdph27260.fpoly.duckfood.screen;
 
 
 import android.annotation.SuppressLint;
