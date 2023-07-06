@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import giangpdph27260.fpoly.duckfood.Fragment.ListFoodFragment;
+import giangpdph27260.fpoly.duckfood.fragment.ListFoodFragment;
 import giangpdph27260.fpoly.duckfood.R;
 import giangpdph27260.fpoly.duckfood.modal.Category;
 

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 
-import giangpdph27260.fpoly.duckfood.Fragment.ListCategoryFragment;
+import giangpdph27260.fpoly.duckfood.fragment.ListCategoryFragment;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";

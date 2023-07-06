@@ -1,4 +1,4 @@
-package giangpdph27260.fpoly.duckfood.Fragment;
+package giangpdph27260.fpoly.duckfood.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -26,7 +28,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import giangpdph27260.fpoly.duckfood.MainActivity;
@@ -62,11 +63,13 @@ public class ListFoodFragment extends Fragment {
                 .load(imgUrlCategory)
                 .into(background_toolbar);
         Toolbar toolbar = view.findViewById(R.id.toolbar_list_food);
-
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setDisplayShowHomeEnabled(true);
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(titleCategory);
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null){
+        actionBar.setTitle(titleCategory);
+        }
+        ImageButton btnBack = view.findViewById(R.id.backButton);
+        btnBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStackImmediate());
         try {
             List<Food> listFood = new ParseHtmlTask().execute(url).get();
             adapter.setListFood(listFood);

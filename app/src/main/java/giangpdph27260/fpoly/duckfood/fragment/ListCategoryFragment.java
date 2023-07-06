@@ -1,4 +1,4 @@
-package giangpdph27260.fpoly.duckfood.Fragment;
+package giangpdph27260.fpoly.duckfood.fragment;
 
 
 import android.os.AsyncTask;
