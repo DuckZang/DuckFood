@@ -4,6 +4,15 @@ public class Food {
     private String foodImgUrl;
     private String foodTitle;
     private String foodDescription;
+    private String href;
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
 
     public String getFoodImgUrl() {
         return foodImgUrl;
