@@ -13,8 +13,11 @@ import android.widget.LinearLayout;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 
@@ -33,25 +36,35 @@ import giangpdph27260.fpoly.duckfood.R;
 import giangpdph27260.fpoly.duckfood.adapter.ListCategoryAdapter;
 import giangpdph27260.fpoly.duckfood.modal.Category;
 
-public class ListCategoryFragment extends Fragment {
-    private DrawerLayout drawerLayout;
-    private LinearLayout drawer;
+public class ListCategoryFragment extends Fragment  {
+    private SwipeRefreshLayout refreshLayout;
+    private List<Category> listCategory;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_category, container, false);
 
-        drawerLayout = view.findViewById(R.id.drawerLayout);
-        drawer = view.findViewById(R.id.drawer);
+        DrawerLayout drawerLayout = view.findViewById(R.id.drawerLayout);
+        LinearLayout drawer = view.findViewById(R.id.drawer);
+        refreshLayout = view.findViewById(R.id.swipeRefresh);
         RecyclerView recycler_category = view.findViewById(R.id.recycler_category);
         recycler_category.setLayoutManager(new LinearLayoutManager(getContext()));
         ListCategoryAdapter adapter = new ListCategoryAdapter();
         recycler_category.setAdapter(adapter);
-
+        String url = "https://www.cet.edu.vn/dao-tao/che-bien-mon-an/cong-thuc";
 
         ImageView btnMenu = view.findViewById(R.id.toolbar_menu);
 //        ImageView btnSearch = findViewById(R.id.toolbar_search);
 
+        refreshLayout.setOnRefreshListener(() -> {
+            try {
+                listCategory = new ParseHtmlTask().execute(url).get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            adapter.setListCategory(listCategory);
+            refreshLayout.setRefreshing(false);
+        });
 
         btnMenu.setOnClickListener(i -> {
             if (drawerLayout.isDrawerOpen(drawer)) {
@@ -61,11 +74,25 @@ public class ListCategoryFragment extends Fragment {
             }
         });
 
-        String url = "https://www.cet.edu.vn/dao-tao/che-bien-mon-an/cong-thuc";
+
 
         try {
-            List<Category> listCategory = new ParseHtmlTask().execute(url).get();
+            listCategory = new ParseHtmlTask().execute(url).get();
             adapter.setListCategory(listCategory);
+            adapter.SetItemCallback(category -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("url",category.getHref());
+                bundle.putString("title",category.getTitle());
+                bundle.putString("img", category.getImageUrl());
+                ListFoodFragment listFoodFragment = new ListFoodFragment();
+                listFoodFragment.setArguments(bundle);
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, listFoodFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            });
         } catch (ExecutionException | InterruptedException e) {
             Log.d("Zzzzzzzzzzzz", "errorScraping: " + e.getMessage());
         }

@@ -26,6 +26,12 @@ import giangpdph27260.fpoly.duckfood.modal.Category;
 public class ListCategoryAdapter extends RecyclerView.Adapter<ListCategoryAdapter.MyViewHolder> {
     private ArrayList<Category> listCategory = new ArrayList<>();
 
+    private ItemCallback itemCallback;
+
+    public void SetItemCallback(ItemCallback itemCallback) {
+        this.itemCallback = itemCallback;
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public void setListCategory(List<Category> categories) {
         this.listCategory = new ArrayList<>(categories);
@@ -53,26 +59,12 @@ public class ListCategoryAdapter extends RecyclerView.Adapter<ListCategoryAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imgItemCategory;
         private final TextView tvItemTitle;
-        private String dataUrl;
-        private String title;
-        private String imgUrl;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(view -> {
                 //TODO xử lý click item
-
-                Bundle bundle = new Bundle();
-                bundle.putString("url",dataUrl);
-                bundle.putString("title",title);
-                bundle.putString("img",imgUrl);
-                ListFoodFragment listFoodFragment = new ListFoodFragment();
-                listFoodFragment.setArguments(bundle);
-
-                FragmentManager fragmentManager = ((FragmentActivity) itemView.getContext()).getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, listFoodFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                Category selectCategory = listCategory.get(getLayoutPosition());
+                itemCallback.onClickItemListener(selectCategory);
             });
             imgItemCategory = itemView.findViewById(R.id.img_item_category);
             tvItemTitle = itemView.findViewById(R.id.tv_item_title);
@@ -84,9 +76,9 @@ public class ListCategoryAdapter extends RecyclerView.Adapter<ListCategoryAdapte
                     .load(category.getImageUrl())
                     .into(imgItemCategory);
             tvItemTitle.setText(category.getTitle());
-            dataUrl = category.getHref();
-            title = category.getTitle();
-            imgUrl = category.getImageUrl();
         }
+    }
+    public interface ItemCallback{
+        void onClickItemListener(Category category);
     }
 }

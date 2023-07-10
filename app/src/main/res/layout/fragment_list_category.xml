@@ -44,10 +44,16 @@
                 android:contentDescription="@string/text_img_content" />
         </LinearLayout>
         <!-- Nội dung chính của Activity -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_category"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_category"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     </LinearLayout>
     <LinearLayout
