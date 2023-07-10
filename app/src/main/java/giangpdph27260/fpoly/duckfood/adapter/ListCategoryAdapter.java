@@ -1,7 +1,6 @@
 package giangpdph27260.fpoly.duckfood.adapter;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,16 +15,15 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import giangpdph27260.fpoly.duckfood.fragment.ListFoodFragment;
 import giangpdph27260.fpoly.duckfood.R;
 import giangpdph27260.fpoly.duckfood.modal.Category;
 
 public class ListCategoryAdapter extends RecyclerView.Adapter<ListCategoryAdapter.MyViewHolder> {
     private ArrayList<Category> listCategory = new ArrayList<>();
 
-    private ItemCallback itemCallback;
+    private itemCallback itemCallback;
 
-    public void SetItemCallback(ItemCallback itemCallback) {
+    public void setItemCallback(itemCallback itemCallback) {
         this.itemCallback = itemCallback;
     }
 
@@ -78,7 +73,7 @@ public class ListCategoryAdapter extends RecyclerView.Adapter<ListCategoryAdapte
             tvItemTitle.setText(category.getTitle());
         }
     }
-    public interface ItemCallback{
+    public interface itemCallback{
         void onClickItemListener(Category category);
     }
 }

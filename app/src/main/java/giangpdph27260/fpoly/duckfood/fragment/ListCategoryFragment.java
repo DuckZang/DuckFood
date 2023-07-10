@@ -79,7 +79,7 @@ public class ListCategoryFragment extends Fragment  {
         try {
             listCategory = new ParseHtmlTask().execute(url).get();
             adapter.setListCategory(listCategory);
-            adapter.SetItemCallback(category -> {
+            adapter.setItemCallback(category -> {
                 Bundle bundle = new Bundle();
                 bundle.putString("url",category.getHref());
                 bundle.putString("title",category.getTitle());
