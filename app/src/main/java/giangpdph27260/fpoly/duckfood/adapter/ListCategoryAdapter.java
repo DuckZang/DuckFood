@@ -21,9 +21,9 @@ import giangpdph27260.fpoly.duckfood.modal.Category;
 public class ListCategoryAdapter extends RecyclerView.Adapter<ListCategoryAdapter.MyViewHolder> {
     private ArrayList<Category> listCategory = new ArrayList<>();
 
-    private itemCallback itemCallback;
+    private ItemCallback itemCallback;
 
-    public void setItemCallback(itemCallback itemCallback) {
+    public void setItemCallback(ItemCallback itemCallback) {
         this.itemCallback = itemCallback;
     }
 
@@ -73,7 +73,7 @@ public class ListCategoryAdapter extends RecyclerView.Adapter<ListCategoryAdapte
             tvItemTitle.setText(category.getTitle());
         }
     }
-    public interface itemCallback{
+    public interface ItemCallback{
         void onClickItemListener(Category category);
     }
 }
