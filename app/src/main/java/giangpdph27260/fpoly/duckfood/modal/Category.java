@@ -5,6 +5,15 @@ import androidx.annotation.NonNull;
 public class Category {
     private String title;
     private String imageUrl;
+    private String href;
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
 
     public Category() {
     }
