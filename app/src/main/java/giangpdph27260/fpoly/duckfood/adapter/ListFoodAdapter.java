@@ -22,6 +22,11 @@ import giangpdph27260.fpoly.duckfood.modal.Food;
 public class ListFoodAdapter extends RecyclerView.Adapter<ListFoodAdapter.MyViewHolder> {
     private ArrayList<Food> listFood = new ArrayList<>();
 
+    private ItemDetailFood detailFood;
+
+    public void setItemDetailFood(ItemDetailFood detailFood){
+        this.detailFood = detailFood;
+    }
     @SuppressLint("NotifyDataSetChanged")
     public void setListFood(List<Food> foods) {
         this.listFood = new ArrayList<>(foods);
@@ -53,13 +58,13 @@ public class ListFoodAdapter extends RecyclerView.Adapter<ListFoodAdapter.MyView
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-//            itemView.setOnClickListener(view -> {
-//
-//
-//            });
-            imgItemFood = (ImageView) itemView.findViewById(R.id.img_item_food);
-            tvItemTitleFood = (TextView) itemView.findViewById(R.id.tv_item_title_food);
-            tvItemDecriptionFood = (TextView) itemView.findViewById(R.id.tv_item_decription_food);
+            itemView.setOnClickListener(view -> {
+                Food selectFood = listFood.get(getLayoutPosition());
+                detailFood.onListenListener(selectFood);
+            });
+            imgItemFood = itemView.findViewById(R.id.img_item_food);
+            tvItemTitleFood = itemView.findViewById(R.id.tv_item_title_food);
+            tvItemDecriptionFood = itemView.findViewById(R.id.tv_item_decription_food);
         }
 
         public void onBind(int position) {
@@ -70,5 +75,8 @@ public class ListFoodAdapter extends RecyclerView.Adapter<ListFoodAdapter.MyView
             tvItemDecriptionFood.setText(food.getFoodDescription());
             tvItemTitleFood.setText(food.getFoodTitle());
         }
+    }
+    public interface ItemDetailFood{
+        void onListenListener(Food food);
     }
 }

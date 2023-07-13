@@ -29,13 +29,12 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 >
-                <ImageButton
+                <ImageView
                     android:id="@+id/backButton"
-                    android:layout_width="35dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
                     android:src="@drawable/ic_back"
-                    android:contentDescription="@string/text_img_content"
-                    style="?attr/borderlessButtonStyle" />
+                    android:contentDescription="@string/text_img_content" />
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
