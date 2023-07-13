@@ -7,13 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,11 +69,25 @@ public class ListFoodFragment extends Fragment {
         if (actionBar != null){
         actionBar.setTitle(titleCategory);
         }
-        ImageButton btnBack = view.findViewById(R.id.backButton);
+        ImageView btnBack = view.findViewById(R.id.backButton);
         btnBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStackImmediate());
         try {
             List<Food> listFood = new ParseHtmlTask().execute(url).get();
             adapter.setListFood(listFood);
+            adapter.setItemDetailFood(food -> {
+                Bundle bundleDetail = new Bundle();
+                bundleDetail.putString("url",food.getHref());
+                bundleDetail.putString("title",food.getFoodTitle());
+                bundleDetail.putString("img", food.getFoodImgUrl());
+                DetailFoodFragment detailFoodFragment = new DetailFoodFragment();
+                detailFoodFragment.setArguments(bundleDetail);
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, detailFoodFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            });
         } catch (ExecutionException | InterruptedException e) {
             Log.d("Zzzzzzzzzzzz", "errorScraping: " + e.getMessage());
         }
