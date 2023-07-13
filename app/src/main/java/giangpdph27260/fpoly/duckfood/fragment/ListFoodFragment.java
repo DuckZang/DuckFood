@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -40,6 +42,7 @@ public class ListFoodFragment extends Fragment {
     private String url;
     private String imgUrlCategory;
     private String titleCategory;
+     ListFoodAdapter adapter = new ListFoodAdapter();
     @SuppressLint({"MissingInflatedId", "ResourceAsColor"})
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,30 +50,13 @@ public class ListFoodFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list_food, container, false);
 
         // Thực hiện các thao tác khác trên giao diện fragment
-        RecyclerView recycler_food = view.findViewById(R.id.recycler_food);
-        recycler_food.setLayoutManager(new LinearLayoutManager(getContext()));
-        ListFoodAdapter adapter = new ListFoodAdapter();
-        recycler_food.setAdapter(adapter);
+
         Bundle bundle = getArguments();
         if (bundle != null){
             url = bundle.getString("url");
             imgUrlCategory = bundle.getString("img");
             titleCategory = bundle.getString("title");
         }
-        // set giao diện cho toolbar
-
-        ImageView background_toolbar = view.findViewById(R.id.backdrop);
-        Glide.with(this)
-                .load(imgUrlCategory)
-                .into(background_toolbar);
-        Toolbar toolbar = view.findViewById(R.id.toolbar_list_food);
-        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
-        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-        if (actionBar != null){
-        actionBar.setTitle(titleCategory);
-        }
-        ImageView btnBack = view.findViewById(R.id.backButton);
-        btnBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStackImmediate());
         try {
             List<Food> listFood = new ParseHtmlTask().execute(url).get();
             adapter.setListFood(listFood);
@@ -94,6 +80,28 @@ public class ListFoodFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RecyclerView recycler_food = view.findViewById(R.id.recycler_food);
+        recycler_food.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        recycler_food.setAdapter(adapter);
+        ImageView background_toolbar = view.findViewById(R.id.backdrop);
+        Glide.with(this)
+                .load(imgUrlCategory)
+                .into(background_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_list_food);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setTitle(titleCategory);
+        }
+        ImageView btnBack = view.findViewById(R.id.backButton);
+        btnBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStackImmediate());
+    }
+
     static class ParseHtmlTask extends AsyncTask<String, Void, List<Food>> {
 
         @Override

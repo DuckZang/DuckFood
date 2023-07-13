@@ -21,24 +21,23 @@ public class DetailFoodFragment extends Fragment {
     private String url;
     private String titleFood;
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_detail_food,container,false);
+        View view = inflater.inflate(R.layout.fragment_detail_food,container,false);
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            url = bundle.getString("url");
+            titleFood = bundle.getString("title");
+        }
+      return view;
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Bundle bundle = getArguments();
-        if (bundle != null){
-            url = bundle.getString("url");
-            titleFood = bundle.getString("title");
-        }
+
         // set giao diện cho toolbar
         ImageView btnBack = view.findViewById(R.id.btn_back_detail_food);
         TextView tvTitle = view.findViewById(R.id.tv_title_detail_food);
