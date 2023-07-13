@@ -21,11 +21,19 @@ public class DetailFoodFragment extends Fragment {
     private String url;
     private String titleFood;
 
-    @SuppressLint("SetJavaScriptEnabled")
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail_food,container,false);
+
+        return inflater.inflate(R.layout.fragment_detail_food,container,false);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null){
             url = bundle.getString("url");
@@ -43,6 +51,5 @@ public class DetailFoodFragment extends Fragment {
         wv_detail_food.loadUrl(url);
         wv_detail_food.setWebViewClient(new WebViewClient());
 
-      return view;
     }
 }
