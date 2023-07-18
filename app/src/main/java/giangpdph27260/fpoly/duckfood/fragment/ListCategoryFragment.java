@@ -1,6 +1,7 @@
 package giangpdph27260.fpoly.duckfood.fragment;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
@@ -34,6 +36,8 @@ import java.util.concurrent.ExecutionException;
 import giangpdph27260.fpoly.duckfood.MainActivity;
 import giangpdph27260.fpoly.duckfood.R;
 import giangpdph27260.fpoly.duckfood.adapter.ListCategoryAdapter;
+import giangpdph27260.fpoly.duckfood.database.CategoryDao;
+import giangpdph27260.fpoly.duckfood.database.CategoryDb;
 import giangpdph27260.fpoly.duckfood.modal.Category;
 
 public class ListCategoryFragment extends Fragment  {
@@ -58,7 +62,7 @@ public class ListCategoryFragment extends Fragment  {
 
         refreshLayout.setOnRefreshListener(() -> {
             try {
-                listCategory = new ParseHtmlTask().execute(url).get();
+                listCategory = new ParseHtmlTask(getContext()).execute(url).get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -77,11 +81,11 @@ public class ListCategoryFragment extends Fragment  {
 
 
         try {
-            listCategory = new ParseHtmlTask().execute(url).get();
+            listCategory = new ParseHtmlTask(getContext()).execute(url).get();
             adapter.setListCategory(listCategory);
             adapter.setItemCallback(category -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("url",category.getHref());
+                bundle.putString("url",category.getLinkListFood());
                 bundle.putString("title",category.getTitle());
                 bundle.putString("img", category.getImageUrl());
                 ListFoodFragment listFoodFragment = new ListFoodFragment();
@@ -101,6 +105,11 @@ public class ListCategoryFragment extends Fragment  {
     }
 
     static class ParseHtmlTask extends AsyncTask<String, Void, List<Category>> {
+       public Context context;
+
+        public ParseHtmlTask(Context context) {
+            this.context = context;
+        }
 
         @Override
         protected List<Category> doInBackground(String... strings) {
@@ -115,8 +124,12 @@ public class ListCategoryFragment extends Fragment  {
                     Category item = new Category();
                     item.setTitle(e.select("h3.title a").text());
                     item.setImageUrl(e.select("img").attr("src"));
-                    item.setHref(e.select("h3.title a").attr("href"));
+                    item.setLinkListFood(e.select("h3.title a").attr("href"));
                     categoryList.add(item);
+                    CategoryDb db = Room.databaseBuilder(context,CategoryDb.class,"database_duckfood").build();
+                    CategoryDao dao = db.categoryDao();
+                    dao.insertCategory(item);
+                    Log.d("zzzzzzzzzzzzzz", "số phần tử  "+ dao.getCategoryCount());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
