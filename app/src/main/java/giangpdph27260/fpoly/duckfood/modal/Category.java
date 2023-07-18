@@ -1,21 +1,31 @@
 package giangpdph27260.fpoly.duckfood.modal;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName ="category")
 
 public class Category {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "imageUrl")
     private String imageUrl;
-    private String href;
-
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
+    @ColumnInfo(name = "listFoodUrl")
+    private String listFoodUrl;
 
     public Category() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -30,13 +40,15 @@ public class Category {
         return imageUrl;
     }
 
-    public void setImageUrl(String image) {
-        this.imageUrl = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Category: {title: " + title + ", imageUrl: " + imageUrl + "}";
+    public String getListFoodUrl() {
+        return listFoodUrl;
+    }
+
+    public void setListFoodUrl(String listFoodUrl) {
+        this.listFoodUrl = listFoodUrl;
     }
 }
