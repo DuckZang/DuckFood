@@ -1,6 +1,8 @@
 package giangpdph27260.fpoly.duckfood.fragment;
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -19,26 +20,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.gson.Gson;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import giangpdph27260.fpoly.duckfood.MainActivity;
 import giangpdph27260.fpoly.duckfood.R;
 import giangpdph27260.fpoly.duckfood.adapter.ListCategoryAdapter;
+import giangpdph27260.fpoly.duckfood.database.MyDatabase;
 import giangpdph27260.fpoly.duckfood.modal.Category;
 
 public class ListCategoryFragment extends Fragment  {
     private SwipeRefreshLayout refreshLayout;
     private List<Category> listCategory;
+    ListCategoryAdapter adapter = new ListCategoryAdapter();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -49,7 +48,7 @@ public class ListCategoryFragment extends Fragment  {
         refreshLayout = view.findViewById(R.id.swipeRefresh);
         RecyclerView recycler_category = view.findViewById(R.id.recycler_category);
         recycler_category.setLayoutManager(new LinearLayoutManager(getContext()));
-        ListCategoryAdapter adapter = new ListCategoryAdapter();
+
         recycler_category.setAdapter(adapter);
         String url = "https://www.cet.edu.vn/dao-tao/che-bien-mon-an/cong-thuc";
 
@@ -57,11 +56,9 @@ public class ListCategoryFragment extends Fragment  {
 //        ImageView btnSearch = findViewById(R.id.toolbar_search);
 
         refreshLayout.setOnRefreshListener(() -> {
-            try {
-                listCategory = new ParseHtmlTask().execute(url).get();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+
+            listCategory = MyDatabase.getInstance(getContext()).categoryDao().getAllCategories();
+
             adapter.setListCategory(listCategory);
             refreshLayout.setRefreshing(false);
         });
@@ -73,39 +70,44 @@ public class ListCategoryFragment extends Fragment  {
                 drawerLayout.openDrawer(drawer);
             }
         });
-
-
-
-        try {
-            listCategory = new ParseHtmlTask().execute(url).get();
+        int count = MyDatabase.getInstance(getContext()).categoryDao().getCategoryCount();
+        if ( count > 0) {
+            listCategory = MyDatabase.getInstance(getContext()).categoryDao().getAllCategories();
             adapter.setListCategory(listCategory);
-            adapter.setItemCallback(category -> {
-                Bundle bundle = new Bundle();
-                bundle.putString("url",category.getHref());
-                bundle.putString("title",category.getTitle());
-                bundle.putString("img", category.getImageUrl());
-                ListFoodFragment listFoodFragment = new ListFoodFragment();
-                listFoodFragment.setArguments(bundle);
-
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, listFoodFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            });
-        } catch (ExecutionException | InterruptedException e) {
-            Log.d("Zzzzzzzzzzzz", "errorScraping: " + e.getMessage());
+        } else {
+            // Bảng "category" không có dữ liệu
+            new ParseHtmlTask(getContext()).execute(url);
         }
 
+        adapter.setItemCallback(category -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("url",category.getLinkListFood());
+            bundle.putString("title",category.getTitle());
+            bundle.putString("img", category.getImageUrl());
+            ListFoodFragment listFoodFragment = new ListFoodFragment();
+            listFoodFragment.setArguments(bundle);
+
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, listFoodFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
         return view;
     }
 
-    static class ParseHtmlTask extends AsyncTask<String, Void, List<Category>> {
+    static class ParseHtmlTask extends AsyncTask<String, Void, Void> {
+        @SuppressLint("StaticFieldLeak")
+        private final Context context;
+
+        public ParseHtmlTask(Context context) {
+            this.context = context;
+        }
 
         @Override
-        protected List<Category> doInBackground(String... strings) {
+        protected Void doInBackground(String... strings) {
             String url = strings[0];
-            List<Category> categoryList = new ArrayList<>();
+
             try {
                 Document document = Jsoup.connect(url).get();
                 Elements element = document.getElementsByClass("col row-box-shadow-5 medium-4 small-12 large-4");
@@ -115,24 +117,19 @@ public class ListCategoryFragment extends Fragment  {
                     Category item = new Category();
                     item.setTitle(e.select("h3.title a").text());
                     item.setImageUrl(e.select("img").attr("src"));
-                    item.setHref(e.select("h3.title a").attr("href"));
-                    categoryList.add(item);
+                    item.setLinkListFood(e.select("h3.title a").attr("href"));
+                    MyDatabase.getInstance(context).categoryDao().insertCategory(item);
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Gson gson = new Gson();
-            String jsonData = gson.toJson(categoryList);
-            Log.d(MainActivity.TAG, "json data : " + jsonData);
-            return categoryList;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<Category> categories) {
-            super.onPostExecute(categories);
-            for (Category cat : categories) {
-                Log.d(MainActivity.TAG, "Result: " + cat.toString());
-            }
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
         }
     }
 }
