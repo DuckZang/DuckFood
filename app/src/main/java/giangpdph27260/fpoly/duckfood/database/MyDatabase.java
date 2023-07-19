@@ -16,7 +16,7 @@ public abstract class MyDatabase extends RoomDatabase {
     public static synchronized MyDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                            MyDatabase.class, "my-database")
+                            MyDatabase.class, "duckfood_database")
                     .allowMainThreadQueries()
                     .build();
         }
