@@ -7,10 +7,6 @@ Comment:
 - Sửa lại UI cho chuẩn design:
     + Toolbar: khoảng cách icon menu, icon search
     + Items ở màn hình danh sách: khoảng cách, size chữ, font style, border
-- Tạo food database bao gồm các bảng:
-    + category (id, title, imageUrl, listFoodUrl)
-- Xử lý lưu db:
-    + Khi bắt đầu vaò màn hình category:
-      - Check trong db có tồn tại list category hay không?
-      - Nếu có thì đọc db hiển thị
-      - Nếu không thì thực hiện scraping, lưu list đã scraping vào db, lưu xong thì đọc data dã lưu ở trong db ra hiển thị
+    + Hiển thị loading ở các màn hình category, listFood khi scraping data, lưu vào db, tắt loading khi hiển thị kết quả lên màn hình
+    + Click "bắt đầu" ở màn hình Splash vào Home, khi "back" không cho trở về màn hình Splash nữa mà sẽ đóng app
+    + Sửa lại các chỗ đặt tên trong màn hình Splash (dùng tiếng anh)
