@@ -46,6 +46,33 @@ public class ListCategoryFragment extends Fragment  {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_category, container, false);
 //        ImageView btnSearch = findViewById(R.id.toolbar_search);
+        DrawerLayout drawerLayout = view.findViewById(R.id.drawerLayout);
+        LinearLayout drawer = view.findViewById(R.id.drawer);
+        SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipeRefresh);
+        RecyclerView recycler_category = view.findViewById(R.id.recycler_category);
+        recycler_category.setLayoutManager(new LinearLayoutManager(getContext()));
+        ImageView btnMenu = view.findViewById(R.id.toolbar_menu);
+        recycler_category.setAdapter(adapter);
+
+        refreshLayout.setOnRefreshListener(() -> {
+            listCategory = MyDatabase.getInstance(getContext()).categoryDao().getAllCategories();
+            adapter.setListCategory(listCategory);
+            refreshLayout.setRefreshing(false);
+        });
+
+        btnMenu.setOnClickListener(i -> {
+            if (drawerLayout.isDrawerOpen(drawer)) {
+                drawerLayout.closeDrawer(drawer);
+            } else {
+                drawerLayout.openDrawer(drawer);
+            }
+        });
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         int count = MyDatabase.getInstance(getContext()).categoryDao().getCategoryCount();
         if (count <= 0) {
             // Bảng "category" không có dữ liệu
@@ -73,33 +100,8 @@ public class ListCategoryFragment extends Fragment  {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         });
-        return view;
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        DrawerLayout drawerLayout = view.findViewById(R.id.drawerLayout);
-        LinearLayout drawer = view.findViewById(R.id.drawer);
-        SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipeRefresh);
-        RecyclerView recycler_category = view.findViewById(R.id.recycler_category);
-        recycler_category.setLayoutManager(new LinearLayoutManager(getContext()));
-        ImageView btnMenu = view.findViewById(R.id.toolbar_menu);
-        recycler_category.setAdapter(adapter);
 
-        refreshLayout.setOnRefreshListener(() -> {
-            listCategory = MyDatabase.getInstance(getContext()).categoryDao().getAllCategories();
-            adapter.setListCategory(listCategory);
-            refreshLayout.setRefreshing(false);
-        });
-
-        btnMenu.setOnClickListener(i -> {
-            if (drawerLayout.isDrawerOpen(drawer)) {
-                drawerLayout.closeDrawer(drawer);
-            } else {
-                drawerLayout.openDrawer(drawer);
-            }
-        });
     }
 
     static class ParseHtmlTask extends AsyncTask<String, Void, List<Category>> {
