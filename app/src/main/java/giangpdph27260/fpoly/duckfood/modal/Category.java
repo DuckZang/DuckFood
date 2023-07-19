@@ -1,18 +1,35 @@
 package giangpdph27260.fpoly.duckfood.modal;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "categories")
 public class Category {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @ColumnInfo (name = "title")
     private String title;
+    @ColumnInfo (name = "imageUrl")
     private String imageUrl;
-    private String href;
+    @ColumnInfo (name = "linkListFood")
+    private String linkListFood;
 
-    public String getHref() {
-        return href;
+    public int getId() {
+        return id;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getLinkListFood() {
+        return linkListFood;
+    }
+
+    public void setLinkListFood(String linkListFood) {
+        this.linkListFood = linkListFood;
     }
 
     public Category() {
