@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "418310947255",
+    "firebase_url": "https://duckfood-bc6b0-default-rtdb.firebaseio.com",
+    "project_id": "duckfood-bc6b0",
+    "storage_bucket": "duckfood-bc6b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418310947255:android:1d2102c2a103eec9756832",
+        "android_client_info": {
+          "package_name": "giangpdph27260.fpoly.duckfood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418310947255-1p1a4dfhk13202oa2qhg58mf4reos6tp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQDb0cr0ekfCQ9wd_oMAXOCLq0LsWj8_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418310947255-1p1a4dfhk13202oa2qhg58mf4reos6tp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

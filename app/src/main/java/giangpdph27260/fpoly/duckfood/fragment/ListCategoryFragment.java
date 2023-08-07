@@ -1,8 +1,6 @@
 package giangpdph27260.fpoly.duckfood.fragment;
 
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,17 +34,18 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import giangpdph27260.fpoly.duckfood.MainActivity;
 import giangpdph27260.fpoly.duckfood.R;
 import giangpdph27260.fpoly.duckfood.adapter.ListCategoryAdapter;
-import giangpdph27260.fpoly.duckfood.database.MyDatabase;
 import giangpdph27260.fpoly.duckfood.modal.Category;
 
 public class ListCategoryFragment extends Fragment  {
-    private List<Category> listCategory;
+    private List<Category> listCategory = new ArrayList<>();
     ListCategoryAdapter adapter = new ListCategoryAdapter();
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("category");
     String url = "https://www.cet.edu.vn/dao-tao/che-bien-mon-an/cong-thuc";
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class ListCategoryFragment extends Fragment  {
         recycler_category.setAdapter(adapter);
 
         refreshLayout.setOnRefreshListener(() -> {
-            listCategory = MyDatabase.getInstance(getContext()).categoryDao().getAllCategories();
+            Log.d("zzzzzzzzzzz", "list : size : " + listCategory.size());
             adapter.setListCategory(listCategory);
             refreshLayout.setRefreshing(false);
         });
@@ -73,18 +78,31 @@ public class ListCategoryFragment extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int count = MyDatabase.getInstance(getContext()).categoryDao().getCategoryCount();
-        if (count <= 0) {
-            // Bảng "category" không có dữ liệu
-            try {
-                listCategory = new ParseHtmlTask(getContext()).execute(url).get();
-                adapter.setListCategory(listCategory);
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Nút dữ liệu tồn tại
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Category category = dataSnapshot.getValue(Category.class);
+                        listCategory.add(category);
+                    }
+                    adapter.setListCategory(listCategory);
+                } else {
+                    // Nút dữ liệu không tồn tại
+                    new ParseHtmlTask().execute(url);
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Category category = dataSnapshot.getValue(Category.class);
+                        listCategory.add(category);
+                    }
+                    adapter.setListCategory(listCategory);
+                }
             }
-        }
-        listCategory = MyDatabase.getInstance(getContext()).categoryDao().getAllCategories();
-        adapter.setListCategory(listCategory);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         adapter.setItemCallback(category -> {
             Bundle bundle = new Bundle();
@@ -100,22 +118,11 @@ public class ListCategoryFragment extends Fragment  {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         });
-
-
     }
-
-    static class ParseHtmlTask extends AsyncTask<String, Void, List<Category>> {
-        @SuppressLint("StaticFieldLeak")
-        private final Context context;
-
-        public ParseHtmlTask(Context context) {
-            this.context = context;
-        }
-
+    static class ParseHtmlTask extends AsyncTask<String, Void, Void> {
         @Override
-        protected List<Category> doInBackground(String... strings) {
+        protected Void doInBackground(String... strings) {
             String url = strings[0];
-            List<Category> list = new ArrayList<>();
             try {
                 Document document = Jsoup.connect(url).get();
                 Elements element = document.getElementsByClass("col row-box-shadow-5 medium-4 small-12 large-4");
@@ -123,24 +130,23 @@ public class ListCategoryFragment extends Fragment  {
                 for (Element e : element) {
                     Log.d(MainActivity.TAG, "element: " + element.outerHtml());
                     Category item = new Category();
+                    FirebaseDatabase db = FirebaseDatabase.getInstance();
                     item.setTitle(e.select("h3.title a").text());
                     item.setImageUrl(e.select("img").attr("src"));
                     item.setLinkListFood(e.select("h3.title a").attr("href"));
-                    MyDatabase.getInstance(context).categoryDao().insertCategory(item);
-                    list = MyDatabase.getInstance(context).categoryDao().getAllCategories();
+                    String categoryKey = db.getReference("category").push().getKey();
+                    db.getReference("category").child(categoryKey).setValue(item);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return list;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<Category> categories) {
-            super.onPostExecute(categories);
-            for (Category cat : categories) {
-                Log.d(MainActivity.TAG, "Result: " + cat.toString());
-            }
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
         }
     }
 }
+

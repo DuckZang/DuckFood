@@ -17,7 +17,7 @@
         android:contentDescription="@string/text_img_content" />
 
     <TextView
-        android:id="@+id/btn_batDau"
+        android:id="@+id/btn_start"
         android:layout_width="140dp"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
