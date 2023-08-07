@@ -30,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.home));
         setContentView(R.layout.activity_splash);
-        TextView btnStart = findViewById(R.id.btn_batDau);
+        TextView btnStart = findViewById(R.id.btn_start);
 
         btnStart.setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
 

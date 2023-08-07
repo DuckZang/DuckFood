@@ -21,7 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,8 +34,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import giangpdph27260.fpoly.duckfood.MainActivity;
 import giangpdph27260.fpoly.duckfood.R;
@@ -43,6 +45,9 @@ public class ListFoodFragment extends Fragment {
     private String imgUrlCategory;
     private String titleCategory;
      ListFoodAdapter adapter = new ListFoodAdapter();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("food");
+     ArrayList<Food> listFood = new ArrayList<>();
     @SuppressLint({"MissingInflatedId", "ResourceAsColor"})
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,8 +62,32 @@ public class ListFoodFragment extends Fragment {
             imgUrlCategory = bundle.getString("img");
             titleCategory = bundle.getString("title");
         }
-        try {
-            List<Food> listFood = new ParseHtmlTask().execute(url).get();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Nút dữ liệu tồn tại
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Food food = dataSnapshot.getValue(Food.class);
+                        listFood.add(food);
+                    }
+                    adapter.setListFood(listFood);
+                } else {
+                    // Nút dữ liệu không tồn tại
+                    new ParseHtmlTask().execute(url) ;
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Food food = dataSnapshot.getValue(Food.class);
+                        listFood.add(food);
+                    }
+                    adapter.setListFood(listFood);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
             adapter.setListFood(listFood);
             adapter.setItemDetailFood(food -> {
                 Bundle bundleDetail = new Bundle();
@@ -74,9 +103,6 @@ public class ListFoodFragment extends Fragment {
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             });
-        } catch (ExecutionException | InterruptedException e) {
-            Log.d("Zzzzzzzzzzzz", "errorScraping: " + e.getMessage());
-        }
 
         return view;
     }
@@ -102,12 +128,11 @@ public class ListFoodFragment extends Fragment {
         btnBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStackImmediate());
     }
 
-    static class ParseHtmlTask extends AsyncTask<String, Void, List<Food>> {
+    static class ParseHtmlTask extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected List<Food> doInBackground(String... strings) {
+        protected Void doInBackground(String... strings) {
             String url = strings[0];
-            List<Food> foodsList = new ArrayList<>();
             try {
                 Document document = Jsoup.connect(url).get();
                 Elements element = document.getElementsByClass("col-md-4 col-sm-4 col-xs-12 item-ltloadmore-posts");
@@ -115,27 +140,23 @@ public class ListFoodFragment extends Fragment {
                 for (Element e : element) {
                     Log.d(MainActivity.TAG, "element: " + element.outerHtml());
                     Food item = new Food();
+                    FirebaseDatabase db = FirebaseDatabase.getInstance();
                     item.setFoodTitle(e.select(".title a").text());
                     item.setFoodImgUrl(e.select("img").attr("src"));
                     item.setHref(e.select("a").attr("href"));
                     item.setFoodDescription(e.select(".des-info").text());
-                    foodsList.add(item);
+                    String foodKey = db.getReference("food").push().getKey();
+                    db.getReference("food").child(foodKey).setValue(item);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Gson gson = new Gson();
-            String jsonData = gson.toJson(foodsList);
-            Log.d(MainActivity.TAG, "json data : " + jsonData);
-            return foodsList;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<Food> foods) {
-            super.onPostExecute(foods);
-            for (Food cat : foods) {
-                Log.d(MainActivity.TAG, "Result: " + cat.toString());
-            }
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
         }
     }
 }
